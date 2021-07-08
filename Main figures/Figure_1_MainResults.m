@@ -69,24 +69,6 @@ for ii = neuron:all.num_cells % ii = cell;
     end
 end
 
-%try putting both images in different color channels
-% NatMov_avgmaps = all.Vis_cellInspection_maps.NatMov.cell_avgproj_mat;
-% PDG_avgmaps = all.Vis_cellInspection_maps.PDG.cell_avgproj_mat;
-% NatMov_actmaps = all.Vis_cellInspection_maps.NatMov.cell_actmap_mat;
-% PDG_actmaps = all.Vis_cellInspection_maps.PDG.cell_actmap_mat;
-% 
-% nrn = 174;
-% xpix = size(NatMov_avgmaps, 2);
-% ypix = size(NatMov_avgmaps, 1);
-% img = zeros(ypix, xpix, 3, size(NatMov_avgmaps, 3));
-% img(:, :, 1, :) = NatMov_actmaps(:, :, :, nrn);
-% img(:, :, 2, :) = NatMov_avgmaps(:, :, :, nrn);
-% figure
-% for kk = 1:size(img, 4)
-%     subplot(1, 7, kk)
-%     image(img(:, :, :, kk))
-%     axis square
-% end
 
 %% reliability on D0 for example field
 JCS003 = StabilityAnalyzer;             % initialize Analyzer object

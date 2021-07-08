@@ -1,9 +1,17 @@
 
 function [data, kernel] = spikeInference(filename,save_flag)
 
-% Updated 09Jul2019 changed the save from eval(['save' filename 'data']) to current, fixing bad form
 % Infers spike rates from calcium imaging data
-% requires function deconvolveCa in the path (dropbox>postprocessing)
+% Expects input file with a fieldname 'DFF', representing calcium data in the form [neurons x frames]
+
+%% Deconvolution code citations:
+
+%% Authors: Pengcheng Zhou, Carnegie Mellon University, 2016
+% ported from the Python implementation from Johannes Friedrich
+
+%% References
+% Friedrich J et.al., NIPS 2016, Fast Active Set Method for Online Spike Inference from Calcium Imaging
+
 if nargin == 0
     [filename,pathname] = uigetfile('.mat');
     load(filename);

@@ -58,7 +58,6 @@ end
 
 % plot each mouse as different color
 
-
 figure(1);    
 scatter(pdg_WS_vec(2:end), mov_WS_vec(2:end), 60, 'filled', 'MarkerFaceColor', color);     
 hold on
@@ -123,58 +122,6 @@ xlim([0 plot_weeks(end)+1])
 hold off
 
 %% average WS mov curves across mice (all curves)
-% % initialize analyser
-% an = StabilityAnalyzer();
-% % first mouse imported must be the mouse with the longest run of data (in this case 7 weeks).
-% % MJG033 has nonconsecutive sessions, so import with vector describing presence of data ([1 1 1 0 1 1 1] indicates data missing on week 4 of 7)
-% an.importData([1 1 1 0 1 1 1]);
-% % if mouse has all consecutive sessions, add data normally
-% an.addData();
-% % if mouse has non-consecutive sessions, add data with vector indicator ([1 1 0 1 1 1] indicates data for weeks 1, 2, 4, 5, 6)
-% an.addData([1 1 0 1 1 1]);
-% an.setQualityThreshold(3);
-% figure
-% an.RDIplotter('PDG', 'Average');
-% hold on
-% an.RDIplotter('NatMov', 'Average');
-% RDIdata = an.getRDIdata;
-% pdgRDI = RDIdata.PDG.RDI_avg;
-% movRDI = RDIdata.NatMov.RDI_avg;
-% pdgRDIsem = RDIdata.PDG.RDI_SEM;
-% movRDIsem = RDIdata.NatMov.RDI_SEM;
-% 
-% pupildata = importdata('pupilinfo_combined.mat');
-% num_sessions = length(pupildata.centroid);
-% pdg_WS_vec = zeros(1, num_sessions);
-% mov_WS_vec = zeros(1, num_sessions);
-% 
-% for kk = 1:num_sessions
-%     movcentroid = pupildata.centroid(kk).NatMov.raw;
-%     pdgcentroid = pupildata.centroid(kk).PDG.raw;
-%     movmed = median(movcentroid);
-%     pdgmed = median(pdgcentroid);
-%     
-%     movdis = zeros(1, size(movcentroid, 1));
-%     for tt = 1:size(movcentroid, 1)
-%         movdis(tt) = pdist([movcentroid(tt, :); movmed], 'euclidean');
-%     end
-%     curr_dis_mov = mean(movdis);
-%     
-%     pdgdis = zeros(1, size(pdgcentroid, 1));
-%     for tt = 1:size(pdgcentroid, 1)
-%         pdgdis(tt) = pdist([pdgcentroid(tt, :); pdgmed], 'euclidean');
-%     end
-%     curr_dis_pdg = mean(pdgdis);
-%     
-%     if kk == 1
-%         ref_mov = curr_dis_mov;
-%         ref_pdg = curr_dis_pdg;
-%     end
-%     
-%     mov_WS_vec(kk) = (mean(movdis)/ref_mov)*100;                     % since averaging, this is expressed as percentage of reference session value
-%     pdg_WS_vec(kk) = (mean(pdgdis)/ref_pdg)*100;
-% end
-
 
 % start with SKKS066
 if nargin < 3

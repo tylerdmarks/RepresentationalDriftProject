@@ -171,29 +171,6 @@ classdef RFAnalyzer < Analyzer
             C.gray.x = delta_azi;  C.gray.y = RDIazi;
             C.blue.x = delta_azi_mean;  C.blue.y = RDIazi_mean;  C.blue.errorbars = delta_azi_SEM;
         end
-
-        % function obj = plotRF_heatmap(obj, cells)
-        %     %for visualization/rough comparison of receptive field changes over time (individual heatmaps are not meaningful on their own, do not represent actual receptive field)
-        %     if isempty(obj.RF_matrix)
-        %         obj.RF_matrix = obj.extractRFs;
-        %     end
-
-        %     if nargin < 2
-        %         cells = 1:obj.numCells;
-        %     end
-
-        %     figure;
-        %     for ii = 1:length(cells)
-        %         for rr = 1:obj.num_sessions
-        %             subplot(obj.num_sessions, 1, rr)
-        %             imagesc(squeeze(imgaussfilt(obj.RF_matrix(cells(ii), :, :, rr), 2))') 
-        %             title(sprintf('Neuron %d session %d | Spatially tuned = %d', cells(ii), rr, obj.RFdata.RFmapping_results.isSpatiallyTuned(rr, cells(ii))))
-        %             pbaspect([1000 800 1])
-        %         end
-        %         set(gcf, 'Position', [600 20, 300, 1000])
-        %         pause
-        %     end
-        % end
         
         function RF_matrix = extractRFs(obj)
             mean_altitude = squeeze(mean(mean(obj.RespData.RF.altitude, 2), 4));          %FOR V2: response matrices now exist in RespData, not RFmapping_results, and dimension order is different

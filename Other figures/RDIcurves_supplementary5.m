@@ -54,52 +54,6 @@ title(titlestring);
 % Adata.n11.PDG.control = nanmean(STDM077.StabilityData.PDG.RDI_control(good_cells));
 % Adata.n11.NatMov.control = nanmean(STDM077.StabilityData.NatMov.RDI_control(good_cells));
 
-%% trying the weeks apart thing
-
-% STDM077 = StabilityAnalyzer();
-% STDM077.importData();
-% % JCS003.addData();
-% STDM077.setQualityThreshold(3);
-% STDM077.cellSelection;
-% 
-% 
-% STDM077.setWeeks([1 1 1 1 1 1 1]);
-% PDG = STDM077.weeksApartRDI('PDG');         % compute these separately for each mouse and then concatenate
-% NatMov = STDM077.weeksApartRDI('NatMov');
-% 
-% figure
-% hold on
-% for kk = 1:length(PDG)
-%     scatter(kk*ones(1, length(PDG{kk})), PDG{kk}, 'filled', 'MarkerFaceColor', [0 0.7 0.7]);
-%     scatter((kk*ones(1, length(NatMov{kk})))+0.1, NatMov{kk}, 'filled', 'MarkerFaceColor', [0.8 0.5 0.5]);
-% end
-% xlim([0 STDM077.num_sessions])
-% ylim([0 1])
-% axis square
-% 
-% % %for the first mouse only
-% % pdg_wa_cat = PDG;
-% % natmov_wa_cat = NatMov;
-% 
-% %subsequent mice
-% for kk = 1:length(PDG)
-%     pdg_wa_cat{kk} = cat(2, pdg_wa_cat{kk}, PDG{kk});
-%     natmov_wa_cat{kk} = cat(2, natmov_wa_cat{kk}, NatMov{kk});
-% end
-% 
-% save pdg_wa_cat pdg_wa_cat
-% save natmov_wa_cat natmov_wa_cat
-% 
-% %all mice
-% figure
-% hold on
-% for kk = 1:length(pdg_wa_cat)
-%     scatter(kk*ones(1, length(pdg_wa_cat{kk})), pdg_wa_cat{kk}, 'filled', 'MarkerFaceColor', [0 0.7 0.7]);
-%     scatter((kk*ones(1, length(natmov_wa_cat{kk})))+0.1, natmov_wa_cat{kk}, 'filled', 'MarkerFaceColor', [0.8 0.5 0.5]);
-% end
-% xlim([0 7])
-% ylim([-0.1 1])
-% axis square
 
 %% slope and y-intercept
 an = StabilityAnalyzer();
@@ -215,12 +169,4 @@ ylim([-0.2 0.25])
 tstat = stats.tstat;
 title(sprintf('y-int comparison, p = %.2e', p));
 
-% figure
-% hold on
-% scatter(pdg_m_cat, pdg_b_cat, 'filled', 'MarkerFaceColor', 'b');
-% scatter(natmov_m_cat, natmov_b_cat, 'filled', 'MarkerFaceColor', 'r');
-% axis square
-% [rpdg, ppdg] = corr(pdg_m_cat', pdg_b_cat');
-% [rnat, pnat] = corr(natmov_m_cat', natmov_b_cat');
-% title(sprintf('Nat r = %.2f p = %.2e, pdg r = %.2f p = %.2e', rnat, pnat, rpdg, ppdg));
 

@@ -254,15 +254,8 @@ classdef ChronicImaging_Mouse < General_Processor
                 obj.NatMov_rel_shuffletest = NatMov_rel_shuffletest;
                 NatMov_statistical_thresh = ttest(obj.StabilityData.MultiMov.CCs{1}, mean(threshold_distribution)) & mean(obj.StabilityData.MultiMov.CCs{1}, 1) > mean(threshold_distribution);  %Cells responsive to NatMov
 
-                % fprintf('n = %d cells out of %d, using %s method \n', sum(NatMov_Responsive), obj.num_cells, criterion)
                 obj.RoiINFO.MultiMov_Responsive_shuffle = NatMov_rel_shuffletest;
                 obj.RoiINFO.MultiMov_Responsive_thresh = NatMov_statistical_thresh;
-                % MultiMov_statistical_test = ttest(obj.StabilityData.MultiMov.CCs{1}, CC_thresh_Nat) & mean(obj.StabilityData.MultiMov.CCs{1}, 1) > CC_thresh_Nat;
-                % MultiMov_rel_shuffletest = obj.trialShuffleTest(obj.RespData.MultiMov.RespMat_Full{1}, obj.StabilityData.MultiMov.CCs{1});
-                % MultiMov_Responsive = MultiMov_statistical_test & MultiMov_rel_shuffletest;
-                % fprintf('n = %d cells out of %d, using %s method \n', sum(MultiMov_Responsive), obj.num_cells, criterion)
-                % obj.RoiINFO.MultiMov_Responsive = MultiMov_rel_shuffletest;
-                % obj.RoiINFO.MultiMov_Responsive_thresholded = MultiMov_Responsive;
             end
             if any(strcmp(use_criteria, 'Visual_Inspection_A'))
                 savedata_flag = 0;
@@ -487,55 +480,6 @@ classdef ChronicImaging_Mouse < General_Processor
                 top_percentiles = avg_threshold;         
             end
         end
-
-        % function above = zScoreCheck(obj, Resp)
-        %     above = zeros(1, obj.num_cells);
-        %     preFrames = 10;
-        %     thresh = obj.ZSCORE;     %z score thresh
-
-        %     for jj = 1:obj.num_cells
-        %         for kk = 1:obj.num_sessions
-        %             curr_score(kk) = mean(mean(Resp(:, preFrames+1:end, jj, kk), 1), 2)/std(mean(Resp(:, 1:preFrames, jj, kk), 1), [], 2);
-        %         end
-        %         above(jj) = mean(curr_score) > thresh;
-        %     end
-        % end
-
-        % function responsive = onTimeCheck(obj, Resp, stimtype)
-        %     responsive = zeros(1, obj.num_cells);
-        %     switch stimtype
-        %     case 'PDG'
-        %         offFrames = 40;
-        %         onFrames = 20;
-        %         off_idx = logical(repmat([ones(1, offFrames) zeros(1, onFrames)], 1, 12));
-        %         on_idx = logical(repmat([zeros(1, offFrames) ones(1, onFrames)], 1, 12));
-        %         Resp_trialcat = squeeze(Resp(:, :, :, 1));
-        %         obj.ALPHA = 0.05;
-        %     case 'NatMov'
-        %         offFrames = 50;
-        %         onFrames = 300;
-        %         off_idx = 1:offFrames;
-        %         on_idx = offFrames+1:offFrames+onFrames;
-        %         Resp_trialcat = squeeze(Resp(:, :, :, 1));
-        %         obj.ALPHA = 0.05;
-        %     end  
-            
-        %     for ii = 1:obj.num_cells
-        %         for rr = 1:size(Resp_trialcat, 1)
-        %             meanoffResp(rr, ii) = squeeze(mean(Resp_trialcat(rr, off_idx, ii)));      % don't need to compare to this for natscene data because the data is already normalized to the mean offtime
-        %             meanonResp(rr, ii) = squeeze(mean(Resp_trialcat(rr, on_idx, ii)));
-        %         end
-        %         if ~strcmp(stimtype, 'NatScenes')
-        %             normResp = meanonResp - meanoffResp;
-        %         else
-        %             normResp = meanonResp;
-        %         end
-        %     end
-            
-        %     for ii = 1:obj.num_cells
-        %         [p(ii), responsive(ii), ~] = signrank(normResp(:, ii)', 0, 'alpha', obj.ALPHA, 'tail', 'right');
-        %     end
-        % end
 
         function out = catTrials(obj, Resp)
             out = [];

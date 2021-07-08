@@ -81,15 +81,6 @@ xlim([0 an.num_sessions])
 ylim([0 0.18])
 
 
-% cat = [];
-% groups = [];
-% for kk = 1:length(weeks_apart_osi)
-%     cat = [cat weeks_apart_osi{kk}];
-%     groups = [groups kk*ones(1, length(weeks_apart_osi{kk}))];
-% end
-% [p, ~, stats] = anova1(cat, groups);
-% c = multcompare(stats, 'CType', 'bonferroni');
-
 cat = [];
 for kk = 1:length(weeks_apart_osi)
     cat = [cat weeks_apart_osi{kk}];

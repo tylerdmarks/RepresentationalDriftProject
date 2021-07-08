@@ -1,16 +1,5 @@
 
 
-% load('TouchofEvil_0.0scrambled.mat');
-% for ff = 100:1052
-%     imagesc(ScrambledMovie(:, :, ff))
-%     title(sprintf('%d', ff))
-%     colormap gray
-%     pause
-% end
-% box off
-% set(gca, 'xtick', []);
-% set(gca, 'ytick', []);
-
 an = StabilityAnalyzer();           % initialize object
 an.importData();                    % import first field
 an.addData();                       % add subsequent fields

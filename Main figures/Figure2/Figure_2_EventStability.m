@@ -45,22 +45,6 @@ event_vectors = eventdata.event_vectors(good_cells, :);         % extract data b
 ts = eventdata.waveform_ts(good_cells);
 waveforms = eventdata.waveforms(good_cells);
 
-% Get rid of neurons whose max responses occur during the offtime
-% mean_catResp = squeeze(nanmean(catResp, 1));            % averaged across trials
-% [~, max_idx] = max(mean_catResp, [], 1);
-% 
-% remove_idx = false(1, sum(good_cells));
-% for ii = 1:sum(good_cells)
-%     if any(max_idx(ii) == find(offidx))
-%         remove_idx(ii) = true;
-%     end
-% end
-% 
-% event_vectors(remove_idx, :) = [];
-% ts(remove_idx) = [];
-% waveforms(remove_idx) = [];
-% Resp(:, :, remove_idx, :) = [];
-% catResp(:, :, remove_idx) = [];
 
 %% Events per neuron for both stimuli
 
@@ -288,7 +272,7 @@ tstat3 = stats.tstat;
 
 num_waves = cellfun(@length, waveforms);
 num_cells = length(waveforms);
-% 1) Calculate by-session zscore for every event
+% Calculate by-session zscore for every event
 offResp = Resp(:, F0, :, :);
 sesZScores = cell(1, num_cells);
 meanZScores = cell(1, num_cells);
@@ -307,25 +291,7 @@ for ii = 1:num_cells
 end
 
 
-% % 2) Calculate length of each event
-% event_lengths = cell(1, num_cells);
-% 
-% for ii = 1:num_cells
-%     for ww = 1:num_waves(ii)
-%         event_lengths{ii}(ww) = size(waveforms{ii}{ww}, 2);
-%     end
-% end
-
-% 3) Log start time of each event
-% start_times = cell(1, num_cells);
-% 
-% for ii = 1:num_cells
-%     for ww = 1:num_waves(ii)
-%         start_times{ii}(ww) = ts{ii}(ww, 1);
-%     end
-% end
-
-% 4) Calculate 'redundancy' of each event, defined by [number of neurons with an event that overlaps at least n percent with a given event / total number of neurons]
+% Calculate 'redundancy' of each event, defined by [number of neurons with an event that overlaps at least n percent with a given event / total number of neurons]
 
 %find number of good cells per mouse
 total_cells_per_mouse = all.num_cells_bymouse;
@@ -372,7 +338,7 @@ for ii = 1:num_cells                % iterate through every neuron
     end
 end
 
-% X) Calculate difference between early and later zScores for every event
+% Calculate difference between early and later zScores for every event
 ZScorediff = cell(1, num_cells);
 pseudoRDI = cell(1, num_cells);
 for ii = 1:num_cells
@@ -520,43 +486,6 @@ ylabel('|delta zscore|');
 ylim([-0.05 1])
 set(gcf, 'Position', [400 400 200 500]);
 
-%binning data by 1 percentiles, ranksum testing top and bottom quartiles of this binned data
-% edges = prctile(cat_x, 0:1:100);
-% binned_x = discretize(cat_x, edges);
-% for bb = 1:length(edges)-1
-%     binned_y_100(bb) = nanmean(cat_y(binned_x == bb));
-% end
-% bottom = binned_y_100(1:25);       %first 'quartile'
-% top = binned_y_100(76:100);
-% p = ranksum(top, bottom);
-% figure
-% boxplot(cat(2, bottom, top), [zeros(1, length(bottom)) ones(1, length(top))]);
-% title(sprintf('p = %.2e', p))
-% xlabel('Binned event avg zscore quartiles');
-% ylabel('Norm. |delta zscore|');
-% set(gcf, 'Position', [400 400 200 500]);
-% ylim([0 0.2])
-
-%1-way anova on the start time stuff for natmov
-% deciles = [];
-% groups = [];
-% for bb = 1:length(edges)-1
-%     curr_decile = cat_y(binned_x == bb);
-%     groupsize = length(curr_decile);
-%     deciles = [deciles curr_decile];
-%     groups = [groups bb*ones(1, groupsize)]; 
-% end
-% [p, ~, stats] = anova1(deciles, groups);
-% c = multcompare(stats, 'CType', 'bonferroni');
-
-%comparing each bin to average with one sample ttest 
-% chance = nanmean(cat_y);
-% p = [];
-% for bb = 1:max(binned_x)
-%     curr_group = cat_y(binned_x == bb);
-%     [~, p(bb)] = ttest(curr_group, chance);
-% end
-
 %save the 10th prctile binned averages from both stimuli to show on same plot for last subpanel       (mean zscore vs instability)
 
 % for PDG
@@ -682,273 +611,7 @@ for bb = 1:length(bins_y_pdg)
     p(bb) = ranksum(bins_y_pdg{bb}, bins_y_natmov{bb});
 end
 
-%% bootstrap analysis of natmov vs pdg waveform mean zscore distributions
-% natmov_wavemeans = cat_x;            % compute each of these first
-% pdg_wavemeans = cat_x;
-% 
-% sample_size = length(pdg_wavemeans);
-% iterations = 1000;
-% ps = [];
-% for tt = 1:iterations
-%     tt
-%     bootsample = datasample(natmov_wavemeans, sample_size);
-%     [~, ps(tt)] = ttest2(bootsample, pdg_wavemeans);
-% end
-% p = mean(ps);
-% 
-% figure; hold on
-% histogram(pdg_wavemeans, 0:2:100)
-% histogram(natmov_wavemeans, 0:2:100)
-% title(sprintf('p = %.2e', p));
-% xlim([0 60])
 
-%% Event independency testing (unused)
-       
-% First: run delta calculations above 
-
-% Calcualte a "diversity score" for every neuron, within groups of neurons with different # of events (only consider neurons with 2+ events)
-% diversity = zeros(1, num_cells);
-% max_same = zeros(1, num_cells);
-% num_events = cellfun(@length, deltas);
-% 
-% for ii = 1:num_cells    
-%     num_up = sum(deltas{ii} == 1);
-%     num_down = sum(deltas{ii} == -1);
-%     num_static = sum(deltas{ii} == 0);
-%     
-%     max_same(ii) = max([num_up num_down num_static]);
-% %     diversity(ii) = (1-max_same/num_events(ii))/(2/3);          % sets 0.333 (best score) to 1 and sets 1 (worst score) to 0
-%     diversity(ii) = max_same(ii)/num_events(ii);
-% end
-% 
-% % plotting
-% cat_div = [];
-% g = [];
-% for yy = 3:8
-%     if yy < 8
-%         cat_div = cat(2, cat_div, diversity(num_events == yy));
-%         g = cat(2, g, yy*ones(1, sum(num_events == yy)));
-%     else
-%         cat_div = cat(2, cat_div, diversity(num_events >= yy));
-%         g = cat(2, g, yy*ones(1, sum(num_events >= yy)));
-%     end
-% end
-% 
-% histogram(diversity(num_events >= 3), 10)
-% 
-% figure
-% violinplot(cat_div, g, 'ShowBox', false, 'ShowNotches', false, 'ShowMedian', false, 'ShowWhisker', false, 'ShowViolin', false);
-% xlabel('Number of events')
-% ylabel('Diversity score')
-% 
-% %visualizing proportions of diversity scores within each 'event class'
-% figure                          % using diversity score
-% for yy = 3:8
-%     if yy < 9
-%         curr_scores = diversity(num_events == yy);
-%     else
-%         curr_scores = diversity(num_events >= yy);
-%     end
-%     x = categorical(curr_scores);
-%     
-%     subplot(3, 2, yy-2)
-%     pie(x)
-%     if yy < 9
-%         title(sprintf('Neurons with %d events', yy));
-%     else
-%         title(sprintf('Neurons with %d+ events', yy));
-%     end
-% end
-% 
-% figure                          % using max_same
-% for yy = 3:8
-%     if yy < 9
-%         curr_scores = max_same(num_events == yy);
-%     else
-%         curr_scores = max_same(num_events >= yy);
-%     end
-%     x = categorical(curr_scores);
-%     
-%     subplot(2, 3, yy-2)
-%     pie(x)
-%     if yy < 9
-%         title(sprintf('Neurons with %d events', yy));
-%     else
-%         title(sprintf('Neurons with %d+ events', yy));
-%     end
-% end
-% 
-% 
-% figure
-% histogram(num_events, 0.5:1:9.5)
-% xlabel('Number of events')
-% ylabel('Neurons')
-% 
-% 
-% % Is diversity score dependent on anything?
-% 
-% %Average DFF zScore
-% frame_catResp = [];
-% for rr = 1:size(Resp, 1)
-%     frame_catResp = cat(1, frame_catResp, squeeze(Resp(rr, :, :, :)));
-% end
-%     
-% fullzScores = zeros(size(frame_catResp, 2), size(frame_catResp, 3));
-% for kk = 1:all.num_sessions
-%     fullzScores(:, kk) = nanmean(frame_catResp(:, :, kk), 1)./nanstd(frame_catResp(:, :, kk), [], 1);
-% end
-% fullzScores = nanmean(fullzScores, 2);
-% 
-% figure
-% scatter(fullzScores(num_events >= 6), diversity(num_events >= 6), 'filled');
-% [~, p] = corr(fullzScores(num_events >= 6), diversity(num_events >= 6)', 'Type', 'Spearman');
-% title(sprintf('All neurons >= 6 events, Spearman p = %.2d', p));
-% xlabel('Ses-average zScore of response')
-% ylabel('Diversity score')
-% axis square
-% 
-% %Mean spike rate
-% natmov_misr = importdata('cat_natmov_misr.mat');
-% natmov_misr = natmov_misr(1:length(good_cells));
-% natmov_misr = natmov_misr(good_cells);
-% 
-% figure
-% scatter(natmov_misr(num_events >= 6), diversity(num_events >= 6), 'filled');
-% [~, p] = corr(natmov_misr(num_events >= 6), diversity(num_events >= 6)', 'Type', 'Spearman');
-% title(sprintf('All neurons >= 6 events, Spearman p = %d', p));
-% xlabel('Ses-average MISR')
-% ylabel('Diversity score')
-% axis square
-% 
-% %% Independency continued
-% 
-% % Find average pairwise correlations between event zscore curves within neurons (in neurons with n or more events)
-% % compare to correlations resulting from using session-shuffled zscore data
-% 
-% %shuffling zscores
-% shuffled_sesZScores = cell(1, num_cells);
-% for ii = 1:num_cells
-%     curr_waves = sesZScores{ii};
-%     if ~isempty(curr_waves)
-%         curr_sessions = length(curr_waves{1});
-%         for ww = 1:num_waves(ii)
-%             neworder = randperm(curr_sessions);
-%             shuffled_sesZScores{ii}{ww} = curr_waves{ww}(neworder);
-%         end
-%     end
-% end
-% 
-% 
-% avg_cc = zeros(1, num_cells);
-% avg_cc_shuffled = zeros(1, num_cells);
-% for ii = 1:num_cells
-%     curr_waves = sesZScores{ii};
-%     curr_waves_shuffled = shuffled_sesZScores{ii};
-%     pairwise_ccs = [];
-%     pairwise_ccs_shuffled = [];
-%     for ww = 1:num_waves(ii)
-%         for mm = ww:num_waves(ii)
-%             if ww ~= mm
-%                 pairwise_ccs = [pairwise_ccs corr(curr_waves{ww}', curr_waves{mm}')];
-%                 pairwise_ccs_shuffled = [pairwise_ccs_shuffled corr(curr_waves_shuffled{ww}', curr_waves_shuffled{mm}')];
-%             end
-%         end
-%     end
-%     avg_cc(ii) = nanmean(pairwise_ccs);
-%     avg_cc_shuffled(ii) = nanmean(pairwise_ccs_shuffled);
-% end
-%                 
-% figure
-% histogram(avg_cc(num_waves >= 4))
-% hold on
-% histogram(avg_cc_shuffled(num_waves >= 4))
-% title('neurons with 4 or more events')
-% xlabel('Average pairwise cc of event zscore curves')
-% ylabel('neurons');
-% 
-% 
-% % average pairwise zscore cc versus a neuron's responsivity (ses-avg zscore or first session zscore)
-% 
-% bycell_sesZScores = zeros(num_cells, all.num_sessions);
-% for kk = 1:all.num_sessions
-%     curr_Resp = permute(Resp(:, :, :, kk), [2 3 4 1]);
-%     framecat_Resp = squeeze(all.catTrials(curr_Resp));            % [total frames x cells]
-%     if strcmp(stim, 'PDG')
-%         exidx = logical(repmat([ones(1, 40) zeros(1, 20)], 1, 96));
-%         framecat_Resp(exidx, :) = [];                        %excise offtime for PDG
-%     end
-%     bycell_sesZScores(:, kk) = nanmean(framecat_Resp, 1)./std(framecat_Resp, [], 1);
-% end
-% bycell_meanZScores = nanmean(bycell_sesZScores, 2);
-% bycell_firstZScores = bycell_sesZScores(:, 1);
-% 
-% %
-% figure
-% subplot(1, 2, 1)
-% x = bycell_meanZScores(num_waves >= 4);
-% y = avg_cc(num_waves >= 4);
-% scatter(x, y, 'filled');
-% axis square
-% xlabel('Ses-avg zscore')
-% ylabel('avg pairwise cc of event zscores')
-% [r, p] = corr(x, y', 'Type', 'Spearman');
-% title(sprintf('neurons with 4 or more events,\n r = %.2f p = %.2e', r, p))
-% hold on
-% edges = prctile(x, 0:10:100);
-% binned_x = discretize(x, edges);
-% for bb = 1:length(edges)-1
-%     binned_y(bb) = nanmean(y(binned_x == bb));
-%     SEM_binned_y(bb) = nanstd(y(binned_x == bb))/sqrt(sum(binned_x == bb));
-%     midpoints(bb) = (edges(bb+1) + edges(bb))/2;
-% end
-% scatter(midpoints, binned_y, 'filled');
-% errorbar(midpoints, binned_y, SEM_binned_y, 'LineStyle', 'none');
-% 
-% subplot(1, 2, 2)
-% bot_thresh = prctile(x, 10);
-% top_thresh = prctile(x, 90);
-% bot_vals = y(x <= bot_thresh);
-% top_vals = y(x >= top_thresh);
-% [~, p] = ttest2(bot_vals, top_vals);
-% boxplot([bot_vals; top_vals]')
-% title(sprintf('p = %.2e', p))
-% xlabel('Bottom vs top 10th prctile')
-% ylabel('avg ccs')
-% axis square
-% 
-% %
-% figure
-% subplot(1, 2, 1)
-% x = bycell_firstZScores(num_waves >= 4);
-% y = avg_cc(num_waves >= 4);
-% scatter(x, y, 'filled');
-% axis square
-% xlabel('First session zscore')
-% ylabel('avg pairwise cc of event zscores')
-% [r, p] = corr(x, y', 'Type', 'Spearman');
-% title(sprintf('neurons with 4 or more events,\n r = %.2f p = %.2e', r, p))
-% hold on
-% edges = prctile(x, 0:10:100);
-% binned_x = discretize(x, edges);
-% for bb = 1:length(edges)-1
-%     binned_y(bb) = nanmean(y(binned_x == bb));
-%     SEM_binned_y(bb) = nanstd(y(binned_x == bb))/sqrt(sum(binned_x == bb));
-%     midpoints(bb) = (edges(bb+1) + edges(bb))/2;
-% end
-% scatter(midpoints, binned_y, 'filled');
-% errorbar(midpoints, binned_y, SEM_binned_y, 'LineStyle', 'none');
-% 
-% subplot(1, 2, 2)
-% bot_thresh = prctile(x, 10);
-% top_thresh = prctile(x, 90);
-% bot_vals = y(x <= bot_thresh);
-% top_vals = y(x >= top_thresh);
-% [~, p] = ttest2(bot_vals, top_vals);
-% boxplot([bot_vals; top_vals]')
-% title(sprintf('p = %.2e', p))
-% xlabel('Bottom vs top 10th prctile')
-% ylabel('avg ccs')
-% axis square
 
 %% plotting events
 

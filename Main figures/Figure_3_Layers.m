@@ -244,22 +244,3 @@ L = [La Lb Lc La Lb Lc]';
 
 figure
 c = multcompare(stats);
-
-%% RDI curves
-% allp = StabilityAnalyzer();
-% allp.importData();
-% allp.addData();
-% allp.setQualityThreshold(3);
-% allp.cellSelection();
-% qual = allp.getUse_cells;
-% good_cells = qual;
-% 
-% figure
-% allp.RDIplotter('PDG', 'Average');
-% hold on
-% allp.RDIplotter('NatMov', 'Average');
-% ylim([-0.2 1])
-% a = refline(0, nanmean(allp.StabilityData.PDG.RDI_control(good_cells)));    a.Color = 'b';
-% b = refline(0, nanmean(allp.StabilityData.NatMov.RDI_control(good_cells))); b.Color = 'r';
-% axis square
-%     

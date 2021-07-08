@@ -1,3 +1,4 @@
+% Prepares data for use in MixedEffectsModels_RDI function for generating RDI curves
 
 %% for normal PDG vs MOV comparisons
 % initialize RDIdata and mouse once

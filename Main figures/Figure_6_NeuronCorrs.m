@@ -1,14 +1,14 @@
 
 % create Analyzer (data import is in constructor in this one)
-SKKS066 = EnsembleAnalyzer();
+MJG013w1 = EnsembleAnalyzer();
 % set quality threshold and assign inclusion criteria
-SKKS066.setQualityThreshold(3);
-SKKS066.cellSelection;
-num_sessions = SKKS066.num_sessions;
-num_cells = SKKS066.num_cells;
+MJG013w1.setQualityThreshold(3);
+MJG013w1.cellSelection;
+num_sessions = MJG013w1.num_sessions;
+num_cells = MJG013w1.num_cells;
 
-qual = SKKS066.getUse_cells;            % reflects included neurons based on above selections
-sessions = SKKS066.getUse_sessions;     % presence data for each neuron
+qual = MJG013w1.getUse_cells;            % reflects included neurons based on above selections
+sessions = MJG013w1.getUse_sessions;     % presence data for each neuron
 % consider neurons present on all sessions (some have NaN values where data was not collected, set to 1 for logical purposes)
 sessions(isnan(sessions)) = 1;
 present = sum(sessions, 2) == num_sessions;
@@ -27,33 +27,12 @@ Scorr_natmov = zeros(num_cells, num_cells, num_sessions);
 Scorr_pdg = zeros(num_cells, num_cells, num_sessions);
 for kk = 1:num_sessions
     fprintf('Session %d of %d\n', kk, num_sessions);
-    Scorr_natmov(:, :, kk) = SKKS066.SignalCorr(SKKS066.RespData.NatMov.RespMat_Full(:, :, :, kk));
-    Scorr_pdg(:, :, kk) = SKKS066.SignalCorr(SKKS066.RespData.PDG.RespMat_Full(:, :, :, kk));
+    Scorr_natmov(:, :, kk) = MJG013w1.SignalCorr(MJG013w1.RespData.NatMov.RespMat_Full(:, :, :, kk));
+    Scorr_pdg(:, :, kk) = MJG013w1.SignalCorr(MJG013w1.RespData.PDG.RespMat_Full(:, :, :, kk));
 end
 save Scorr_natmov Scorr_natmov
 save Scorr_pdg Scorr_pdg
 
-% Within session control matrices
-% Scorr_natmov_WS = zeros(num_cells, num_cells, num_sessions, 2);
-% Scorr_pdg_WS = zeros(num_cells, num_cells, num_sessions, 2);
-% 
-% clear NatMov_RespMat
-% clear PDG_RespMat
-% for kk = 1:num_sessions
-%     fprintf('Session %d of %d\n', kk, num_sessions);
-%     NatMov_RespMat(:, :, :, 1) = SKKS066.RespData.NatMov.RespMat_Full(2:2:end, :, :, kk);
-%     NatMov_RespMat(:, :, :, 2) = SKKS066.RespData.NatMov.RespMat_Full(1:2:end, :, :, kk);
-%     PDG_RespMat(:, :, :, 1) = SKKS066.RespData.PDG.RespMat_Full(2:2:end, :, :, kk);
-%     PDG_RespMat(:, :, :, 2) = SKKS066.RespData.PDG.RespMat_Full(1:2:end, :, :, kk);
-%     
-%     for eo = 1:2
-%         Scorr_natmov_WS(:, :, kk, eo) = SKKS066.SignalCorr(NatMov_RespMat(:, :, :, eo));
-%         Scorr_pdg_WS(:, :, kk, eo) = SKKS066.SignalCorr(PDG_RespMat(:, :, :, eo));
-%     end
-% end
-% 
-% save Scorr_natmov_WS Scorr_natmov_WS
-% save Scorr_pdg_WS Scorr_pdg_WS
 
 %% ------- Noise corrs 201210 ---------%
 
@@ -61,32 +40,24 @@ save Scorr_pdg Scorr_pdg
 Ncorr_natmov = zeros(sum(good_cells), sum(good_cells), num_sessions);           % need to limit to only good_cells to save time
 Ncorr_pdg = zeros(sum(good_cells), sum(good_cells), num_sessions);
 
-% matrices for within-session comparisons (D0 only)
-% Ncorr_natmov_WS = zeros(sum(good_cells), sum(good_cells), num_sessions, 2);               % going to yield two different versions, one using even bins, other using odd bins
-% Ncorr_pdg_WS = zeros(sum(good_cells), sum(good_cells), num_sessions, 2);
+
 
 frames = 5760;      % to match amount of data used for corr calculation between stimuli
 for kk = 1:num_sessions
     fprintf('Session %d out of %d\n', kk, num_sessions);
-    PDG = SKKS066.RespData.PDG.RespMat_Full(:, :, :, kk);               
-    NatMov = SKKS066.RespData.NatMov.RespMat_Full(:, :, :, kk);
+    PDG = MJG013w1.RespData.PDG.RespMat_Full(:, :, :, kk);               
+    NatMov = MJG013w1.RespData.NatMov.RespMat_Full(:, :, :, kk);
     
     fprintf('PDG...\n');
-    Ncorr_pdg(:, :, kk) = SKKS066.NoiseCorr(PDG, frames);       % the NoiseCorr method only performs calculations on good_cells, as established above.
-%     Ncorr_pdg_WS(:, :, kk, 1) = MJG013w1.NoiseCorr(PDG(2:2:end, :, :), frames);   %  squeeze(mean(PDG, 1))
-%     Ncorr_pdg_WS(:, :, kk, 2) = MJG013w1.NoiseCorr(PDG(1:2:end, :, :), frames);
-
+    Ncorr_pdg(:, :, kk) = MJG013w1.NoiseCorr(PDG, frames);       % the NoiseCorr method only performs calculations on good_cells, as established above.
     
     fprintf('NatMov...\n');
-    Ncorr_natmov(:, :, kk) = SKKS066.NoiseCorr(NatMov, frames);
-%     Ncorr_natmov_WS(:, :, kk, 1) = MJG013w1.NoiseCorr(NatMov(2:2:end, :, :), frames);   %squeeze(mean(NatMov, 1))
-%     Ncorr_natmov_WS(:, :, kk, 2) = MJG013w1.NoiseCorr(NatMov(1:2:end, :, :), frames); 
+    Ncorr_natmov(:, :, kk) = MJG013w1.NoiseCorr(NatMov, frames);
+
 end
 
 save Ncorr_natmov Ncorr_natmov
 save Ncorr_pdg Ncorr_pdg
-% save Ncorr_natmov_WS Ncorr_natmov_WS
-% save Ncorr_pdg_WS Ncorr_pdg_WS
 
 %% Visualization
 
@@ -115,11 +86,11 @@ load good_cells_pdg
 corr_pdg = corr_pdg(good_cells, good_cells, :);
 
 % sort
-PDGResp = SKKS066.RespData.PDG.RespMat_Full(:, :, good_cells, :);
-NatResp = SKKS066.RespData.NatMov.RespMat_Full(:, :, good_cells, :);
+PDGResp = MJG013w1.RespData.PDG.RespMat_Full(:, :, good_cells, :);
+NatResp = MJG013w1.RespData.NatMov.RespMat_Full(:, :, good_cells, :);
 PDGcatResp = [];
 NatcatResp = [];
-for kk = 1:SKKS066.num_sessions
+for kk = 1:MJG013w1.num_sessions
     PDGcatResp = cat(1, PDGcatResp, PDGResp(:, :, :, kk));
     NatcatResp = cat(1, NatcatResp, NatResp(:, :, :, kk));
 end
@@ -169,7 +140,7 @@ xlabel('D final')
 ylabel('D final')
 
 % difference matrix between D0 and D42 for both stimuli
-coloraxis = ([-0.2 0.2]);
+coloraxis = ([-1 1]);
 figure
 colormap(redblue);
 subplot(1, 2, 1)
@@ -262,43 +233,6 @@ end
 % end
 
 
-% CCws
-
-% %import either Scorr or Ncorr
-% corr_natmov = importdata('Ncorr_natmov_WS.mat');
-% corr_pdg = importdata('Ncorr_pdg_WS.mat');
-% 
-% %rectify identity line to 0 for visualization
-% num_cells = size(corr_natmov, 1);
-% num_sessions = size(corr_natmov, 3);
-% I = logical(eye(num_cells));
-% for eo = 1:2
-%     for kk = 1:num_sessions                         
-%         natmov_curr = corr_natmov(:, :, kk, eo);
-%         natmov_curr(I) = 0;
-%         corr_natmov(:, :, kk, eo) = natmov_curr;
-% 
-%         pdg_curr = corr_pdg(:, :, kk, eo);
-%         pdg_curr(I) = 0;
-%         corr_pdg(:, :, kk, eo) = pdg_curr;
-%     end
-% end
-% 
-% %extract only good_cells -- IF NECESSARY
-% % load good_cells_natmov
-% % corr_natmov = corr_natmov(good_cells, good_cells, :, :);
-% % load good_cells_pdg
-% % corr_pdg = corr_pdg(good_cells, good_cells, :, :);
-% 
-% nat_winses_cc = zeros(1, num_sessions);
-% pdg_winses_cc = zeros(1, num_sessions);
-% 
-% %2D correlation
-% for kk = 1:num_sessions
-%     nat_winses_cc(kk) = corr2(corr_natmov(:, :, kk, 1), corr_natmov(:, :, kk, 2));
-%     pdg_winses_cc(kk) = corr2(corr_pdg(:, :, kk, 1), corr_pdg(:, :, kk, 2));
-% end
-
 
 %% pooling data across fields
 
@@ -325,28 +259,6 @@ end
 save nat_btwses_cc_cat nat_btwses_cc_cat
 save pdg_btwses_cc_cat pdg_btwses_cc_cat
 
-% % CC ws
-% % 
-% % nat_winses_cc_cat = cell(1, 7);
-% % pdg_winses_cc_cat = cell(1, 7);
-% 
-% weeks = [1 1 1 1 1 1 1];                  % starting on week 1
-% if ~isempty('weeks')
-%     num_sessions = length(weeks);
-%     ct = 1;
-%     for kk = 1:num_sessions
-%         if weeks(kk)
-%             nat_winses_cc_cat{kk} = [nat_winses_cc_cat{kk} nat_winses_cc(ct)];
-%             pdg_winses_cc_cat{kk} = [pdg_winses_cc_cat{kk} pdg_winses_cc(ct)];
-%             ct = ct + 1;
-%         end
-%     end
-% end
-% % 
-% save nat_winses_cc_cat nat_winses_cc_cat
-% save pdg_winses_cc_cat pdg_winses_cc_cat
-
-
 
 %% plotting pooled data
 
@@ -370,15 +282,9 @@ xlim([0 3])
 set(gcf, 'Position', [200 200 250 500])
 
 % D
-metric = 'cc';              % cc or mse
-switch metric
-    case 'cc'
-        nat = importdata('nat_btwses_cc_cat.mat');
-        pdg = importdata('pdg_btwses_cc_cat.mat');
-%     case 'mse'     
-%         nat = importdata('nat_btwses_mse_cat.mat');
-%         pdg = importdatat('pdg_btwses_mse_cat.mat');
-end
+nat = importdata('nat_btwses_cc_cat.mat');
+pdg = importdata('pdg_btwses_cc_cat.mat');
+
 
 nat = cellfun(@(x)1-x, nat, 'UniformOutput', false);
 pdg = cellfun(@(x)1-x, pdg, 'UniformOutput', false);

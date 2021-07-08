@@ -64,18 +64,8 @@ legend off
 refline(0, nanmean(gad.StabilityData.NatMov.RDI_control(good_cells)));
 refline(0, nanmean(gad.StabilityData.PDG.RDI_control(good_cells)));
 
-% NOTE: RDI stats are handled by LMEM using the MixedEffectsModels_RDI function
-% RDIdata = gad.getRDIdata;
-% PDG_RDI = RDIdata.PDG.RDI_included_scatter;            % has NaN values where cell is not present
-% NatMov_RDI = RDIdata.NatMov.RDI_included_scatter;
-% 
-% for kk = 1:size(PDG_RDI, 1)
-%     curr_pdg_vals = PDG_RDI(kk, :);
-%     curr_pdg_vals(isnan(curr_pdg_vals)) = [];
-%     curr_natmov_vals = NatMov_RDI(kk, :);
-%     curr_natmov_vals(isnan(curr_natmov_vals)) = [];
-%     [~,p(kk)] = ttest(curr_pdg_vals, curr_natmov_vals, 'tail', 'both');
-% end
+% NOTE: RDI curves shown on figure and stats are handled by LMEM using the MixedEffectsModels_RDI function
+
 
 %responsivity
 gad.setQualityThreshold(3);         % uses StabilityAnalyzer object with pooled data generated above

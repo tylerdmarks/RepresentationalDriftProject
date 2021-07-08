@@ -1,6 +1,7 @@
-% Master script for further processing DF/F data into format for analysis. Prodcues data organized into different structures for ease of use.
+% Master script for further processing DF/F data into format for analysis (format in which the data for this study is provided). 
+% Prodcues data organized into different structures for ease of use.
 %
-%   NOTE: "MOV" == "NatMov", "RDI" == "RDI"
+%   NOTE: "MOV" == "NatMov"
 %
 % RespData = [repeats, frames, cells, sessions], contains response matrices for both stimuli for all neurons across all sessions 
 %       - RespMat_Full = full response matrix

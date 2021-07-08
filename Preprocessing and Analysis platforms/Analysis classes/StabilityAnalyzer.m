@@ -109,42 +109,6 @@ classdef StabilityAnalyzer < Analyzer
             axis square
         end
 
-        % function out = weeksApartRDI(obj, stimtype)
-        %     switch stimtype
-        %         case 'PDG'
-        %             corrected_RespData = obj.alignWeeks(obj.RespData.PDG.RespMat_Full, 4, 3, 'RespData');
-        %         case 'NatMov'
-        %             corrected_RespData = obj.alignWeeks(obj.RespData.NatMov.RespMat_onTime, 4, 3, 'RespData');
-        %         case 'MultiMov'
-        %     end 
-
-        %     qual = obj.getUse_cells;
-        %     sessions = obj.getUse_sessions;
-        %     corrected_sessions = obj.alignWeeks(sessions, 2, 1, 'RoiINFO');
-
-        %     processor = StabilityProcessor();
-        %     processor.setCCmethod('Random');
-        %     processor.setSubsampleflag('No');
-        %     processor.num_cells = obj.num_cells;        % manually force this I guess
-        %     max_distance = size(corrected_RespData, 4)-1;
-        %     out = cell(1, max_distance);        % output is cell array of vectors containing avg RDI values calculated for every combination of 'weeks apart', i.e. out{1} contains all avg RDI values for sessions 1 week apart
-        %     weeks = obj.getWeeks;
-        %     for kk = 1:size(corrected_RespData, 4)
-        %         kk
-        %         for qq = 1:size(corrected_RespData, 4)
-        %             try
-        %             if (qq > kk) && weeks(qq) && weeks(kk)
-        %                 curr_dist = qq - kk;
-        %                 [RDI, ~, ~] = processor.stabilityBtwSessions(corrected_RespData(:, :, :, kk), corrected_RespData(:, :, :, qq));
-        %                 out{curr_dist} = [out{curr_dist} nanmean(RDI(qual & corrected_sessions(:, kk)' & corrected_sessions(:, qq)'))];
-        %             end
-        %             catch
-        %                 keyboard
-        %             end
-        %         end
-        %     end
-        % end
-
         function out = weeksApartOSI(obj)
             qual = obj.getUse_cells;
             sessions = obj.getUse_sessions;
