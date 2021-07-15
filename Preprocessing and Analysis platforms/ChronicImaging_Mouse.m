@@ -88,7 +88,7 @@ classdef ChronicImaging_Mouse < General_Processor
             %If no inputs are provided, you can select them from your directory, also in any order
             proplist =  properties(obj);
             if nargin < 3
-                disp('Select all data files')
+                disp('Select all data files (RespData, RoiINFO, & StabilityData)')
                 dataNames = uigetfile('.mat', 'MultiSelect', 'on');
                 if iscell(dataNames)
                     for zz = 1:length(dataNames)
