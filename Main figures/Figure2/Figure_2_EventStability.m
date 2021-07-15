@@ -1,4 +1,4 @@
-% select stimulus to study
+%% select stimulus to study
 stim = 'NatMov';
 switch stim
     case 'NatMov'
@@ -216,6 +216,7 @@ save cat_negevents_natmov cat_negevents
 save cat_zeroevents_natmov cat_zeroevents
 
 %plotting 
+%import saved data if necessary
 % cat_posevents_pdg = importdata('cat_posevents_pdg.mat');
 % cat_negevents_pdg = importdata('cat_negevents_pdg.mat');
 % cat_zeroevents_pdg = importdata('cat_zeroevents_pdg.mat');
@@ -266,9 +267,7 @@ tstat3 = stats.tstat;
 %% What influences the way in which an event changes over time?
 % Delta zScore over time as a function of 
 % 1) Ses-average event zscore (or 1st session event zscore)
-% 2) Length of the event (unused)
-% 3) Time of event (unused)
-% 4) 'Redundancy' of an event
+% 2) 'Redundancy' of an event
 
 num_waves = cellfun(@length, waveforms);
 num_cells = length(waveforms);

@@ -182,6 +182,12 @@ ylim([0 1])
 
 %% RDI curves, all neurons
 %uses StabilityAnalyzer object generated above using all imaging fields
+all = StabilityAnalyzer;
+all.importData;         % import datafiles for first mouse ('RespData', 'RoiINFO', 'StabilityData')
+all.addData();          % add datafiles for subsequent mice (all consecutive sessions)
+all.addData([1 1 0 1 1 1]);         % if necessary, use input arg to indicate weeks for which data is present, only necessary for mice with non-consecutive sessions. 
+                                    % e.g. [1 1 1 0 1 1 1] for data corresponding to sessions 1 2 3 5 6 7, [1 1 0 1 1 1] for sessions 1 2 4 5 6, etc.
+all.setQualityThreshold(3);
 all.cellSelection;
 qual = all.getUse_cells;
 sessions = all.getUse_sessions;
