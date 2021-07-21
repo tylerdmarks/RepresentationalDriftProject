@@ -49,16 +49,16 @@ for s = 1:max(numSess)
             MouseID = [MouseID; m*ones(sum(present_idx_1)+sum(present_idx_2),1)];
 
             % Extract RDI data by mouse for plotting
-            RDI_stim1_MouseAvg(m) = mean(RDI_stim1);
-            RDI_stim2_MouseAvg(m) = mean(RDI_stim2);
+            RDI_stim1_MouseAvg(m) = nanmean(RDI_stim1);
+            RDI_stim2_MouseAvg(m) = nanmean(RDI_stim2);
         end
     end
     
     % Calculate mean RDI and standard error across mice (for plotting)
-    RDI_stim1_mean(s) = mean(RDI_stim1_MouseAvg);
-    RDI_stim1_SE(s) = std(RDI_stim1_MouseAvg)/sqrt(length(unique(MouseID)));
-    RDI_stim2_mean(s) = mean(RDI_stim2_MouseAvg);
-    RDI_stim2_SE(s) = std(RDI_stim2_MouseAvg)/sqrt(length(unique(MouseID)));
+    RDI_stim1_mean(s) = nanmean(RDI_stim1_MouseAvg);
+    RDI_stim1_SE(s) = nanstd(RDI_stim1_MouseAvg)/sqrt(length(unique(MouseID)));
+    RDI_stim2_mean(s) = nanmean(RDI_stim2_MouseAvg);
+    RDI_stim2_SE(s) = nanstd(RDI_stim2_MouseAvg)/sqrt(length(unique(MouseID)));
 
     
     % Put data into table
