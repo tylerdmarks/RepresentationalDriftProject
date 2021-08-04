@@ -252,7 +252,18 @@ groupwidth = min(0.8, nbars/(nbars + 1.5));
 for nn = 1:nbars
     x = (1:ngroups) - groupwidth/2 + (2*nn-1) * groupwidth / (2*nbars);
     errorbar(x, bar_vector(:,nn), error_vector(:,nn), '.');
+    if nn == 1
+        x_pdg = x;
+    else
+        x_mov = x;
+    end
 end
+scatter(repmat(x_pdg(1), 1, length(cat_posevents_pdg)), cat_posevents_pdg, 'g');
+scatter(repmat(x_pdg(2), 1, length(cat_negevents_pdg)), cat_negevents_pdg, 'g');
+scatter(repmat(x_pdg(3), 1, length(cat_zeroevents_pdg)), cat_zeroevents_pdg, 'g');
+scatter(repmat(x_mov(1), 1, length(cat_posevents_natmov)), cat_posevents_natmov, 'g');
+scatter(repmat(x_mov(2), 1, length(cat_negevents_natmov)), cat_negevents_natmov, 'g');
+scatter(repmat(x_mov(3), 1, length(cat_zeroevents_natmov)), cat_zeroevents_natmov, 'g');
 
 xlabel('1 is up, 2 is down, 3 is no change')
 ylabel('Proportion of events')
