@@ -199,7 +199,7 @@ good_cells = qual' & present;
 figure
 all.RDIplotter('PDG', 'Average');
 hold on
-all.RDIplotter('MultiMov', 'Average');
+all.RDIplotter('NatMov', 'Average');
 ylim([-0.1 0.5])
 refline(0, nanmean(all.StabilityData.PDG.RDI_control(good_cells)));
 refline(0, nanmean(all.StabilityData.NatMov.RDI_control(good_cells)));
